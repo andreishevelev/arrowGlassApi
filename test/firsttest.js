@@ -1,11 +1,12 @@
 import supertest from 'supertest';
 import { expect } from 'chai';
 import fs from 'fs';
+import { getSystemErrorMap } from 'util';
  
 
 const request = supertest('https://sandbox-quickbooks.api.intuit.com/');
 
-const accessToken = 'eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..gpDO5AJwPTPE0bRbwx3sig.0iU9IHv43BSDUIedChhAjCo-3za5Tb-6M5jcVE_1dA1qeB8eytClqJtwQIGIGOPmTaB6zDMzJxeWULKsNnBEM4FC-MKc2CKIsp3uZXDDNpsBJOjRsefQBIgtPH32haG9ypMyzxBPfB3e4HTpedofXdTcdTiyq8aAVWGgcqeRINFWWXBTZbuyjday80UNY2baPxG37UoWm0AIoi4sKD5gDf7ao2ys2kquM5DeoOKz9FaKSsRBCNQFDOctCMorhnT4RbpU8x800h0c9ISBSiTPpV-Zxz38m7EYEY1mvqmJh6PHifaTksP9NwOgMy6jrBUrPhheJIkGkyc5dLA3PduRMJkqnHLAWruCa29U_Oww9dBjSz5xVDFRSbKMuJ9EHMJVt8rJhdQ434nPmR7qNDbsBCCj7RUaOg8zMfzi6_t-uCm9LYe3N3j7-M0dI4NAT3MIX44I3CWy--1Um90tFRJkYjWdUB8Rpmk9oTw76z-DeX1n9xGw1JHhtEemcxr_QZATFP9QZuR6BkXg8plsVymbi3HsOWR4j5wXpUk1XCRe8KhqtqvYbEOViguYwrvfChPcTCOxrV5Z2wFPmpe5CDvLauR1B8jGLFRy0EVxpvzvIET6sBrEQUDo2ujgZ_ieZ1sooijyof2nuWI4vnrd_1iVdV8LF50lhH-ae1f9mnowYSwB276J3RvcsyAKF97qDdQhYK8CJPQdZR7rYoCdLS391etX7jZeWBoEOsiMAiYOH0d-3pH7J4d2et0bX2St-JQi.OrJUawfWDJQbstCMu7l_iA';
+const accessToken = 'eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..QGvNkjtPCMfKiVPTSmHW-g.2dAvNEE_euWal8_XGo27KwY107ke7-OGnePwQv9UT1P7q-s6B2PPQtHe3rM96xpRUU9a72dfu8jrpp8JFiSXYUmUzp-lcTmjd-EltU7b8rrFrqCx20EzvRHfErkpOQfzOwcW71eGBlhSLHhTzQmIY6VzO4n6-brP6ITuatQ4NcIZwSw58q__vXo34DvBfquvRgdoZhm5J03MyoHCicWHtm4kCfJ1G7rMMCZlnm8s7Iy_rC1EEpxclrBK5JOUuPW9gINEnT5xn_d8M9uxRW20NlyaDfl0CIpWDG62aTYHmafs8jI0KIuTk339d6KE8FmQVBGmY1zfOz_02gkYcybYdlJnaa31j_L8V81dFc3Oqm0FnuKoZi6BEUnE5FnvDxRcA2FDUebVn3v2kFdGE27k760docls3ujcz6E8B3ICuB5G2GD5DHtbiyx_fX93gMHdfSzeabouy_J6Cb_TujZJU49P9n44ljFrvZzuuyeUL1Pg4tqQv5IU8ToHLpwj_aSTWd3EqpsMRNTS0nm4G9K-SDZKn3kHHXnuvczKBJj_qExmTJqXhkC77ArsMCUEe2TIjmlGR8Y-hns4std_hjD9CfGkLSyfZYoAVHkt1a7J3u8A8rsm0xz0LwXq_GLFqx4ItntLxVfa7mKWFsHuYaVwI3DRbOTisUFAdOjOAU17Lta0rWBJUydQE-TMsRj1iQsbIIt7bhuLNiqfeLLiec3Iz7ymjEousC-p62m89OJoNOwyq5_a6IDazNxzkUgldmVt.FnzqymhjEMRvuBfB8UPsQA';
 
 // Creating customer list
         let customersList = [{Id : null, FullyQualifiedName : null, NetIncome : null}];
@@ -33,8 +34,6 @@ const accessToken = 'eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..gpDO5AJwPT
         });
 
         //console.log(customersList);
-
-        
         
         let q = 1;
         while (q < customersList.length) 
@@ -60,13 +59,23 @@ const accessToken = 'eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..gpDO5AJwPT
 
         console.log(customersList);
 
-        const data = JSON.stringify(customersList);
+        //const data = JSON.stringify(customersList);
+
+        
+
+        async function arrayToCSV (data) {
+            const csv = await data.map(row => Object.values(row));
+            csv.unshift(Object.keys(data[0]));
+            return `"${csv.join('"\n"').replace(/,/g, '","')}"`;
+          }
+
+        const csvReport = await arrayToCSV(customersList);
+
+        console.log(csvReport);
 
         try {
-            fs.writeFileSync('NetIncomeReport.json', data);
-            console.log("JSON data is saved.");
+            fs.writeFileSync('NetIncomeReport.csv', csvReport);
+            console.log("SCV data is saved.");
         } catch (error) {
             console.error(err);
         };
-
-        // test email notifications
