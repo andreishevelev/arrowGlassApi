@@ -69,4 +69,4 @@ const accessToken = 'eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..gpDO5AJwPT
             console.error(err);
         };
 
-        // change in the branche
+        // test email notifications
