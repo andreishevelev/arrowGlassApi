@@ -1,67 +1,61 @@
 import supertest from 'supertest';
-import { expect } from 'chai';
 import fs from 'fs';
 import { getSystemErrorMap } from 'util';
  
 
-const request = supertest('https://sandbox-quickbooks.api.intuit.com/');
+const request = supertest('https://quickbooks.api.intuit.com/');
 
-const accessToken = 'eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..QGvNkjtPCMfKiVPTSmHW-g.2dAvNEE_euWal8_XGo27KwY107ke7-OGnePwQv9UT1P7q-s6B2PPQtHe3rM96xpRUU9a72dfu8jrpp8JFiSXYUmUzp-lcTmjd-EltU7b8rrFrqCx20EzvRHfErkpOQfzOwcW71eGBlhSLHhTzQmIY6VzO4n6-brP6ITuatQ4NcIZwSw58q__vXo34DvBfquvRgdoZhm5J03MyoHCicWHtm4kCfJ1G7rMMCZlnm8s7Iy_rC1EEpxclrBK5JOUuPW9gINEnT5xn_d8M9uxRW20NlyaDfl0CIpWDG62aTYHmafs8jI0KIuTk339d6KE8FmQVBGmY1zfOz_02gkYcybYdlJnaa31j_L8V81dFc3Oqm0FnuKoZi6BEUnE5FnvDxRcA2FDUebVn3v2kFdGE27k760docls3ujcz6E8B3ICuB5G2GD5DHtbiyx_fX93gMHdfSzeabouy_J6Cb_TujZJU49P9n44ljFrvZzuuyeUL1Pg4tqQv5IU8ToHLpwj_aSTWd3EqpsMRNTS0nm4G9K-SDZKn3kHHXnuvczKBJj_qExmTJqXhkC77ArsMCUEe2TIjmlGR8Y-hns4std_hjD9CfGkLSyfZYoAVHkt1a7J3u8A8rsm0xz0LwXq_GLFqx4ItntLxVfa7mKWFsHuYaVwI3DRbOTisUFAdOjOAU17Lta0rWBJUydQE-TMsRj1iQsbIIt7bhuLNiqfeLLiec3Iz7ymjEousC-p62m89OJoNOwyq5_a6IDazNxzkUgldmVt.FnzqymhjEMRvuBfB8UPsQA';
+const accessToken = 'eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..25FA2uCZwwfjqYZUJDJC8A.p1UQGUP_dc-RPppDk3Va8_fYtaDX1vOKK4L2RFIXXWQiKpok8TqFSMtss7nlAvf48-mi7a4nsCqiYkqbHBFaWPtsWI0PjH3_M7ob8x_FfgJHtSYD5H9Ur8iEl9XxPwVUZ44nKCfURY8D_kmpY8rluj7BD0B6cu5Bw7rPE97HYo7rQq6MoroB-lcEEj4X6l_g8TJ4iF_Gmglf-PgDh2qcRy-WC7DzDQ0NkDl-LcCBda-B9p_EwW-LZx-Emnbr5XuO73seXHGiAyA8yadWfK2OObjfJA30-6km6rCWwNX0M7ICeC3_-YTWCW6Y-EZAOVc7GPbAef_GUFaZg_AY8CK-hSj9P3ri5U1xEuxGrZPI_05e6qVOikY3vDtkxhkydsxjaJt3SDnS81egqs7-ZJaH7bT027NSkhcm6SpXXWD3H1WcPTkFCIOEP58kf17v1dweWFFEWlnOCruOQJCxNtIPaG_JTCqfP-Q_dZeoPbxA8NvYUxHEpFsvJhJq7Db38gt4wQo-OjC0U-Fja-Wio8o65LiD_zypAJRElbjdneWrGM5YpWkE_659zkUAS-O-XrDdaUmPW5_zmcB4Ety0CqAyTTBCSku0da9tqZzmNp9lQGWCyDB_O-eLdtb7vLNuGf-b2lCUWe49oDYMPOkSuAWsBlUd5-FFmHT3FQVpONrp3qGT5TZQZXxHPR77zIHYndCUs_8Ky5DzOC-mJlngn52LI-OT9YRi32cx96XHLHBPmC4cj0XwnKEWZWJMxSwx4_ij.UR_pLI-qOb_gHG_zRZrbcw';
 
-// Creating customer list
+// Creating customerlist
+
         let customersList = [{Id : null, FullyQualifiedName : null, NetIncome : null}];
 
-        const customers = await request.get('v3/company/4620816365171332690/query?query=SELECT%20*%20FROM%20customer')
+
+        const customers1 = await request.get('v3/company/9130350746253306/query?query=SELECT%20*%20FROM%20customer%20maxresults%201000%20startposition%201')// + startPosition)
         .set('Authorization', 'Bearer ' + accessToken)
         .set('Accept', 'application/json');
-        // console.log(res.body.QueryResponse.Customer[0].Id);
-        let i = 0;
-        // customers.body.QueryResponse.Customer.forEach(element => {
-        //     customersList[i += 1] = {Id : element.Id, FullyQualifiedName : element.FullyQualifiedName};
-        //     //customersList.push(element.Id);
-        //     //customersList[-1].FullyQualifiedName.push(element.FullyQualifiedName);
-        //     console.log(element.FullyQualifiedName);
-        //     console.log(element.Id);
 
-        //console.log(res.body.QueryResponse.Customer[0].Id);
+        const customers2 = await request.get('v3/company/9130350746253306/query?query=SELECT%20*%20FROM%20customer%20maxresults%201000%20startposition%201000')// + startPosition)
+        .set('Authorization', 'Bearer ' + accessToken)
+        .set('Accept', 'application/json');
+
+        // const customers3 = await request.get('v3/company/9130350746253306/query?query=SELECT%20*%20FROM%20customer%20maxresults%201000%20startposition%202000')// + startPosition)
+        // .set('Authorization', 'Bearer ' + accessToken)
+        // .set('Accept', 'application/json');
+
+        // const customers4 = await request.get('v3/company/9130350746253306/query?query=SELECT%20*%20FROM%20customer%20maxresults%201000%20startposition%203000')// + startPosition)
+        // .set('Authorization', 'Bearer ' + accessToken)
+        // .set('Accept', 'application/json');
+
+        // const customers5 = await request.get('v3/company/9130350746253306/query?query=SELECT%20*%20FROM%20customer%20maxresults%201000%20startposition%204000')// + startPosition)
+        // .set('Authorization', 'Bearer ' + accessToken)
+        // .set('Accept', 'application/json');
+
+        const customers = customers1;
+        console.log(customers.body);
+
+/*
+        let i = 0;
         customers.body.QueryResponse.Customer.forEach(element => {
             customersList[i += 1] = {Id : element.Id, FullyQualifiedName : element.FullyQualifiedName};
-            //customersList.push(element.Id);
-            //customersList[-1].FullyQualifiedName.push(element.FullyQualifiedName);
-            //console.log(element.FullyQualifiedName);
-            //console.log(element.Id);
-
         });
 
-        //console.log(customersList);
-        
+// Adding net income to the customerList
+
         let q = 1;
         while (q < customersList.length) 
         {
-        const res = await request.get('v3/company/4620816365171332690/reports/ProfitAndLoss?start_date=2015-06-01&end_date=2022-01-01&customer=' + customersList[q].Id)
+        const res = await request.get('v3/company/9130350746253306/reports/ProfitAndLoss?start_date=2015-06-01&end_date=2022-01-01&customer=' + customersList[q].Id)
         .set('Authorization', 'Bearer ' + accessToken)
         .set('Accept', 'application/json');
         
         customersList[q += 0].NetIncome = res.body.Rows.Row.at(-1).Summary.ColData.at(-1).value;
 
-
-        //console.log(res.body.Rows.Row.at(-1).Summary.ColData.at(-1).value);
-        
-        // let customerId = await res.body.Header.Customer;
-        // const customerName = await request.get('v3/company/4620816365171332690/customer/' + customerId)
-        // .set('Authorization', 'Bearer ' + accessToken)
-        // .set('Accept', 'application/json');
-        // console.log(customerName.body.Customer.FullyQualifiedName);
-
         q++;
-        
         }
 
-        console.log(customersList);
-
-        //const data = JSON.stringify(customersList);
-
-        
+// Converting customerList array to SCV
 
         async function arrayToCSV (data) {
             const csv = await data.map(row => Object.values(row));
@@ -73,9 +67,12 @@ const accessToken = 'eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..QGvNkjtPCM
 
         console.log(csvReport);
 
+// Saving SCV to the file
+
         try {
             fs.writeFileSync('NetIncomeReport.csv', csvReport);
             console.log("SCV data is saved.");
         } catch (error) {
             console.error(err);
         };
+*/
